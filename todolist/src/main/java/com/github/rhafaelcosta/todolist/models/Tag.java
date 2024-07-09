@@ -24,6 +24,12 @@ public class Tag {
     @OneToMany(mappedBy = "tag")
     private List<TaskTag> tasksTags;
 
+    public Tag() { }
+
+    public Tag(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
