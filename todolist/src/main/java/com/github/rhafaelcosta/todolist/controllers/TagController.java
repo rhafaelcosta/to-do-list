@@ -1,6 +1,7 @@
 package com.github.rhafaelcosta.todolist.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.rhafaelcosta.todolist.exceptions.EntityAlreadyExistsException;
 import com.github.rhafaelcosta.todolist.models.Tag;
 import com.github.rhafaelcosta.todolist.requests.TagRequest;
+import com.github.rhafaelcosta.todolist.responses.TagResponse;
 import com.github.rhafaelcosta.todolist.services.TagService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -33,45 +35,37 @@ public class TagController {
     }
 
     @GetMapping
-	public List<Tag> listar() {
-		return tagService.findAll();
+	public ResponseEntity<List<TagResponse>> listar() {
+		var tags = tagService.findAll()
+							 .stream()
+							 .map(TagResponse::new)
+							 .collect(Collectors.toList());
+
+		return ResponseEntity.status(HttpStatus.OK).body(tags);
 	}
 
     @GetMapping("/{id}")
-	public Tag findById(@PathVariable Long id) throws EntityNotFoundException {
-		return tagService.findById(id);
+	public ResponseEntity<TagResponse> findById(@PathVariable Long id) throws EntityNotFoundException {
+		var tag = tagService.findById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(new TagResponse(tag));
 	}
 
 	@PostMapping
-	public ResponseEntity<Tag> insert(@RequestBody @Valid TagRequest request) {
-		try {
-			var tag = this.tagService.save(request);
-			return ResponseEntity.status(HttpStatus.CREATED).body(tag);
-		} catch (EntityAlreadyExistsException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
+	public ResponseEntity<TagResponse> insert(@RequestBody @Valid TagRequest request) throws EntityAlreadyExistsException {
+		var tag = this.tagService.save(request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new TagResponse(tag));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Tag> update(@PathVariable Long id, @RequestBody @Valid TagRequest request) {
-		try {
-
-			var tag = this.tagService.save(id, request);
-			return ResponseEntity.status(HttpStatus.OK).body(tag);
-
-		} catch (EntityAlreadyExistsException | EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
+	public ResponseEntity<TagResponse> update(@PathVariable Long id, @RequestBody @Valid TagRequest request) throws EntityNotFoundException, EntityAlreadyExistsException {
+		var tag = this.tagService.save(id, request);
+		return ResponseEntity.status(HttpStatus.OK).body(new TagResponse(tag));
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) {
-		try {
-			this.tagService.delete(id);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
+	public ResponseEntity<String> delete(@PathVariable Long id) throws EntityNotFoundException {
+		this.tagService.delete(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
+
 }
