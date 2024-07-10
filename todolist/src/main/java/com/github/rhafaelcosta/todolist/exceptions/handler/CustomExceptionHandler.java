@@ -44,7 +44,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityAlreadyExistsException.class)
 	public final ResponseEntity<ErrorResponse> handleEntityAlreadyExistsExceptions(Exception ex, WebRequest request) {
 		var response = new ErrorResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
 
 }
