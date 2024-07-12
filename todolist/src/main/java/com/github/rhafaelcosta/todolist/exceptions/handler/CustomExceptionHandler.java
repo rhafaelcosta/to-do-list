@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.github.rhafaelcosta.todolist.exceptions.EntityAlreadyExistsException;
+import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
 import com.github.rhafaelcosta.todolist.responses.ErrorResponse;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -36,7 +37,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	/**
-	 * Handles EntityAlreadyExistsException and returns a 400 Bad Request response.
+	 * Handles EnumNotFoundException and returns a 400 Bad Request response.
+	 * @param ex
+	 * @param request
+	 * @return
+	 */
+    @ExceptionHandler(EnumNotFoundException.class)
+	public final ResponseEntity<ErrorResponse> handleEnumNotFoundExceptions(Exception ex, WebRequest request) {
+		var response = new ErrorResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	/**
+	 * Handles EntityAlreadyExistsException and returns a 409 Conflict response.
 	 * @param ex
 	 * @param request
 	 * @return

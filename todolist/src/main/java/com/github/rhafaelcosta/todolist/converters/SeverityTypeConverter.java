@@ -1,6 +1,7 @@
 package com.github.rhafaelcosta.todolist.converters;
 
 import com.github.rhafaelcosta.todolist.enums.SeverityType;
+import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -19,11 +20,15 @@ public class SeverityTypeConverter implements AttributeConverter<SeverityType, I
 
     @Override
     public SeverityType convertToEntityAttribute(Integer value) {
-        if (value == null) {
+        try {
+            if (value == null) {
+                return null;
+            }
+
+            return SeverityType.getSeverityTypeByCode(value);
+        } catch (EnumNotFoundException e) {
             return null;
         }
-
-        return SeverityType.getSeverityTypeByCode(value);
     }
 
 }

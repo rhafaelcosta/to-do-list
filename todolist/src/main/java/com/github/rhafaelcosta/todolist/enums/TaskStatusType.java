@@ -2,6 +2,8 @@ package com.github.rhafaelcosta.todolist.enums;
 
 import java.util.Arrays;
 
+import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
+
 public enum TaskStatusType {
 
     ACTIVE   (1, "Active"),
@@ -25,10 +27,10 @@ public enum TaskStatusType {
         return description;
     }
 
-    public static TaskStatusType getTaskStatusTypeByCode(Integer code) {
+    public static TaskStatusType getTaskStatusTypeByCode(Integer code) throws EnumNotFoundException {
         return Arrays.stream(TaskStatusType.values())
                      .filter(status -> status.code.equals(code))
                      .findFirst()
-                     .orElseThrow( () -> new IllegalArgumentException("Invalid TaskStatusType code: " + code));
+                     .orElseThrow( () -> new EnumNotFoundException("Invalid TaskStatusType code: " + code));
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.rhafaelcosta.todolist.exceptions.EntityAlreadyExistsException;
-import com.github.rhafaelcosta.todolist.models.Tag;
 import com.github.rhafaelcosta.todolist.requests.TagRequest;
 import com.github.rhafaelcosta.todolist.responses.TagResponse;
 import com.github.rhafaelcosta.todolist.services.TagService;

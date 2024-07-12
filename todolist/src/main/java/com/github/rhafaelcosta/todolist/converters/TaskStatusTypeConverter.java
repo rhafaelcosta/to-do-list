@@ -1,6 +1,7 @@
 package com.github.rhafaelcosta.todolist.converters;
 
 import com.github.rhafaelcosta.todolist.enums.TaskStatusType;
+import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -19,11 +20,15 @@ public class TaskStatusTypeConverter implements AttributeConverter<TaskStatusTyp
 
     @Override
     public TaskStatusType convertToEntityAttribute(Integer value) {
-        if (value == null) {
+        try {
+            if (value == null) {
+                return null;
+            }
+
+            return TaskStatusType.getTaskStatusTypeByCode(value);
+        } catch (EnumNotFoundException e) {
             return null;
         }
-
-        return TaskStatusType.getTaskStatusTypeByCode(value);
     }
 
 }

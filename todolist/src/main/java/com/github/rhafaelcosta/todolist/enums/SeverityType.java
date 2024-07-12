@@ -2,6 +2,8 @@ package com.github.rhafaelcosta.todolist.enums;
 
 import java.util.Arrays;
 
+import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
+
 public enum SeverityType {
 
     CRITICAL (1, "Critical"),
@@ -25,11 +27,11 @@ public enum SeverityType {
         return description;
     }
 
-    public static SeverityType getSeverityTypeByCode(Integer code) {
+    public static SeverityType getSeverityTypeByCode(Integer code) throws EnumNotFoundException {
         return Arrays.stream(SeverityType.values())
                      .filter(status -> status.code.equals(code))
                      .findFirst()
-                     .orElseThrow( () -> new IllegalArgumentException("Invalid SeverityType code: " + code));
+                     .orElseThrow( () -> new EnumNotFoundException("Invalid SeverityType code: " + code));
     }
 
 }
