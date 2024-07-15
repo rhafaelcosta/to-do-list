@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
 import com.github.rhafaelcosta.todolist.requests.TaskRequest;
+import com.github.rhafaelcosta.todolist.responses.TaskDetailResponse;
 import com.github.rhafaelcosta.todolist.responses.TaskResponse;
 import com.github.rhafaelcosta.todolist.services.TaskService;
 
@@ -43,9 +44,9 @@ public class TaskController {
 	}
 
     @GetMapping("/{id}")
-	public ResponseEntity<TaskResponse> findById(@PathVariable Long id) throws EntityNotFoundException {
+	public ResponseEntity<TaskDetailResponse> findById(@PathVariable Long id) throws EntityNotFoundException {
 		var task = taskService.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(new TaskResponse(task));
+		return ResponseEntity.status(HttpStatus.OK).body(new TaskDetailResponse(task));
 	}
 
 	@PostMapping
