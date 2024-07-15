@@ -1,5 +1,9 @@
 package com.github.rhafaelcosta.todolist.requests;
 
+import java.util.List;
+
+import com.github.rhafaelcosta.todolist.responses.TagResponse;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,6 +24,8 @@ public record TaskRequest(
     Integer severityType,
 
     @NotNull
-    Integer taskStatusType) {
+    Integer taskStatusType,
+
+    List<TagResponse> tags) {
 
 }
