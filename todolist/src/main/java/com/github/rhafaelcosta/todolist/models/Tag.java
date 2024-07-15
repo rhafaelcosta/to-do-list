@@ -4,10 +4,11 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,12 +22,16 @@ public class Tag {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "tag")
-    private List<TaskTag> tasksTags;
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    private List<Task> tasks;
 
     public Tag() { }
 
     public Tag(String name) {
+        this.name = name;
+    }
+
+    public Tag(Long id, String name) {
         this.name = name;
     }
 
@@ -46,12 +51,12 @@ public class Tag {
         this.name = name;
     }
 
-    public List<TaskTag> getTasksTags() {
-        return tasksTags;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public void setTasksTags(List<TaskTag> tasksTags) {
-        this.tasksTags = tasksTags;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
 }

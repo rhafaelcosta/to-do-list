@@ -1,43 +1,43 @@
 package com.github.rhafaelcosta.todolist.models;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TASK_TAG")
 public class TaskTag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private TaskTagId id;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id")
-    private Tag tag;
-
-    @ManyToOne
+    @MapsId("taskId")
     @JoinColumn(name = "task_id")
     private Task task;
 
-    public Long getId() {
+    @ManyToOne
+    @MapsId("tagId")
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
+
+    public TaskTag() {}
+
+    public TaskTag(Task task, Tag tag) {
+        this.task = task;
+        this.tag = tag;
+        this.id = new TaskTagId(task.getId(), tag.getId());
+    }
+
+    public TaskTagId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(TaskTagId id) {
         this.id = id;
-    }
-
-    public Tag getTag() {
-        return tag;
-    }
-
-    public void setTag(Tag tag) {
-        this.tag = tag;
     }
 
     public Task getTask() {
@@ -46,6 +46,14 @@ public class TaskTag {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 
     @Override

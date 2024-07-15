@@ -19,8 +19,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -60,8 +61,13 @@ public class Task {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
-    @OneToMany(mappedBy = "task")
-    private List<TaskTag> tasksTags;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "TASK_TAG",
+        joinColumns = @JoinColumn(name = "task_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
 
     public Long getId() {
         return id;
@@ -135,12 +141,12 @@ public class Task {
         this.owner = owner;
     }
 
-    public List<TaskTag> getTasksTags() {
-        return tasksTags;
+    public List<Tag> getTags() {
+        return tags;
     }
 
-    public void setTasksTags(List<TaskTag> tasksTags) {
-        this.tasksTags = tasksTags;
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
 }
