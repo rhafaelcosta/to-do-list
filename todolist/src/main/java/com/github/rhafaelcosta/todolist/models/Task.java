@@ -41,11 +41,11 @@ public class Task {
     @Column(nullable = false)
     private Integer priority;
 
-    @Column(nullable = false)
+    @Column(name = "severity_type", nullable = false)
     @Convert(converter = SeverityTypeConverter.class)
     private SeverityType severityType;
 
-    @Column(nullable = false)
+    @Column(name = "status_type", nullable = false)
     @Convert(converter = TaskStatusTypeConverter.class)
     private TaskStatusType taskStatusType;
 
