@@ -1,8 +1,7 @@
 package com.github.rhafaelcosta.todolist.controllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.rhafaelcosta.todolist.exceptions.EnumNotFoundException;
+import com.github.rhafaelcosta.todolist.filters.TaskFilter;
 import com.github.rhafaelcosta.todolist.requests.TaskRequest;
 import com.github.rhafaelcosta.todolist.responses.ErrorResponse;
 import com.github.rhafaelcosta.todolist.responses.TaskDetailResponse;
@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -51,12 +50,8 @@ public class TaskController {
 			)
 		}
 	)
-	public ResponseEntity<List<TaskResponse>> listar() {
-		var tasks = taskService.listAll()
-                            .stream()
-                            .map(TaskResponse::new)
-                            .collect(Collectors.toList());
-
+	public ResponseEntity<Page<TaskResponse>> listar(TaskFilter filter, Pageable pageable) {
+		var tasks = taskService.getPaginatedTasksByFilter(filter, pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(tasks);
 	}
 
