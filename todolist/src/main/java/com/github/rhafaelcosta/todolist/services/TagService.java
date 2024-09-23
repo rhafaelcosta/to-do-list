@@ -20,7 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class TagService {
 
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
     TagService(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
@@ -28,7 +28,7 @@ public class TagService {
 
     /**
      * Retrieves a paginated list of all tags.
-     *
+     * <p>
      * This method uses the {@link Pageable} interface to enable pagination of the result set.
      * The {@link Pageable} object should contain information about the page number, page size, and sorting options.
      *
@@ -51,7 +51,7 @@ public class TagService {
 
     /**
      * Counts the total number of tags that match the given name filter.
-     *
+     * <p>
      * If the name filter is null or empty, this method returns the total count of all tags in the repository.
      * Otherwise, it applies the filtering criteria based on the tag name.
      *
@@ -92,8 +92,7 @@ public class TagService {
         // Call the method to verify the existence of a tag with this name
         this.verifyTagNameAlreadyExists(request);
 
-        var tag = tagRepository.save(new Tag(request.name()));
-        return tag;
+        return tagRepository.save(new Tag(request.name()));
     }
 
     /**

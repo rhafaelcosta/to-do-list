@@ -34,7 +34,7 @@ import jakarta.validation.Valid;
 @Tag(name = "Users", description = "Endpoints for Managing Users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -52,7 +52,7 @@ public class UserController {
     )
     public ResponseEntity<List<UserResponse>> listAll() {
         var users = this.userService
-                        .listar()
+                        .listAll()
                         .stream()
                         .map(UserResponse::new)
                         .collect(Collectors.toList());
@@ -60,7 +60,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @Operation(
         summary = "Fetch the user by id",
         description = "Fetches the user entity by its unique identifier from the data source.",
@@ -96,7 +96,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponse(user));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}")
     @Operation(
         summary = "Update a user by id",
         description = "Updates an existing user entity identified by the given id with the provided request data.",
@@ -117,7 +117,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(user));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     @Operation(
         summary = "Delete a user by id",
         description = "Deletes the user entity identified by the given id.",

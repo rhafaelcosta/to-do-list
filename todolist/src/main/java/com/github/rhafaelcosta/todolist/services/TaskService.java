@@ -30,9 +30,9 @@ import jakarta.transaction.Transactional;
 @Service
 public class TaskService {
 
-    private TagService tagService;
-    private UserService userService;
-    private TaskRepository taskRepository;
+    private final TagService tagService;
+    private final UserService userService;
+    private final TaskRepository taskRepository;
 
     public TaskService(TagService tagService, UserService userService, TaskRepository taskRepository) {
         this.tagService = tagService;
@@ -42,7 +42,7 @@ public class TaskService {
 
     /**
      * Retrieves a paginated list of all tasks based on the provided filter and pagination information.
-     *
+     * <p>
      * This method first fetches the filtered and paginated tasks, maps them to a list of {@link TaskResponse} objects,
      * and then wraps the result in a {@link PageImpl} object.
      *
@@ -65,7 +65,7 @@ public class TaskService {
 
     /**
      * Counts the total number of tasks that match the given filter criteria.
-     *
+     * <p>
      * If the filter is null, this method returns the total count of all tasks in the repository.
      * Otherwise, it applies the filtering criteria specified in the {@link TaskFilter} object.
      *
@@ -79,8 +79,6 @@ public class TaskService {
         }
 
         Specification<Task> specification = Specification.where(TaskSpecification.hasUserId(filter.userId()))
-                .and(TaskSpecification.hasTitle(filter.title()))
-                .and(TaskSpecification.hasPriority(filter.priority()))
                 .and(TaskSpecification.hasSeverityTypeCode(filter.severityTypeCode()))
                 .and(TaskSpecification.hasTaskStatusTypeCode(filter.taskStatusTypeCode()));
 
@@ -109,7 +107,7 @@ public class TaskService {
      */
     @Transactional
     public Task save(TaskRequest request) throws EntityNotFoundException, EnumNotFoundException {
-        var task = convertTaskRequestToEntityRequest(null, request, true);
+        var task = convertTaskRequestToEntityRequest(null, request);
 
         taskRepository.save(task);
         return task;
@@ -126,7 +124,7 @@ public class TaskService {
      */
     @Transactional
     public Task save(Long id, TaskRequest request) throws EntityNotFoundException, EnumNotFoundException {
-        var task = convertTaskRequestToEntityRequest(id, request, false);
+        var task = convertTaskRequestToEntityRequest(id, request);
 
         taskRepository.save(task);
         return task;
@@ -152,8 +150,7 @@ public class TaskService {
      * @throws EntityNotFoundException if a related entity (e.g., owner) is not found.
      * @throws EnumNotFoundException   if an enum value provided in the request is invalid.
      */
-    private Task convertTaskRequestToEntityRequest(Long id, TaskRequest request, Boolean includeTags)
-            throws EntityNotFoundException, EnumNotFoundException {
+    private Task convertTaskRequestToEntityRequest(Long id, TaskRequest request) throws EntityNotFoundException, EnumNotFoundException {
         Task task = new Task();
         task.setTags(new ArrayList<>());
 
@@ -200,7 +197,7 @@ public class TaskService {
 
     /**
      * Retrieves a paginated list of tasks that match the given filter criteria.
-     *
+     * <p>
      * If the filter is null, this method returns a paginated list of all tasks.
      * Otherwise, it applies the filtering criteria specified in the {@link TaskFilter} object and returns the matching tasks.
      *
@@ -215,8 +212,6 @@ public class TaskService {
 
         // Create a specification based on the provided filter
         Specification<Task> specification = Specification.where(TaskSpecification.hasUserId(filter.userId()))
-                .and(TaskSpecification.hasTitle(filter.title()))
-                .and(TaskSpecification.hasPriority(filter.priority()))
                 .and(TaskSpecification.hasSeverityTypeCode(filter.severityTypeCode()))
                 .and(TaskSpecification.hasTaskStatusTypeCode(filter.taskStatusTypeCode()));
 

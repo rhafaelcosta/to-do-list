@@ -14,7 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class UserService {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -25,7 +25,7 @@ public class UserService {
      *
      * @return a list containing all users
      */
-    public List<User> listar() {
+    public List<User> listAll() {
         return this.userRepository.findAll();
     }
 
@@ -100,7 +100,7 @@ public class UserService {
     /**
      * Checks if the provided email is already in use by another user, excluding the user with the provided ID.
      *
-     * @param id the ID of the current user (may be null if it's a new user)
+     * @param id the ID of the current user (maybe null if it's a new user)
      * @param request the user data to check
      * @throws EntityAlreadyExistsException if the provided email is already in use by another user
      */
